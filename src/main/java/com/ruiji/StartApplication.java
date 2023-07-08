@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Slf4j
 public class StartApplication {
     public static void main(String[] args) {
+        //....
         SpringApplication.run(StartApplication.class);
     }
 }
