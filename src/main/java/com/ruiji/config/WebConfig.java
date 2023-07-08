@@ -14,9 +14,9 @@ import java.util.List;
 public class WebConfig extends WebMvcConfigurationSupport {
     @Override
     protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/backend/**").addResourceLocations("/backend/");
-        registry.addResourceHandler("/front/**").addResourceLocations("/front/");
-        registry.addResourceHandler("/test/**").addResourceLocations("/test/");
+        registry.addResourceHandler("/backend/**").addResourceLocations("classpath:/static/backend/");
+        registry.addResourceHandler("/front/**").addResourceLocations("classpath:/static/front/");
+        registry.addResourceHandler("/test/**").addResourceLocations("classpath:/static/test/");
         super.addResourceHandlers(registry);
     }
 

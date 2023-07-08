@@ -1,10 +1,12 @@
 package com.ruiji.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruiji.common.BaseContext;
 import com.ruiji.common.R;
 import com.ruiji.dao.OrdersDao;
+import com.ruiji.daomin.Category;
 import com.ruiji.daomin.OrderDetail;
 import com.ruiji.daomin.Orders;
 import com.ruiji.dto.OrdersDto;
@@ -56,6 +58,14 @@ public class OrderController {
         //设置records
         ordersDtoPage.setRecords(ordersDtoList);
         return R.success(ordersDtoPage);
+    }
+    @GetMapping("/page")
+    public R<Page> getPage(int page, int pageSize) {
+        Page pagec = new Page(page, pageSize);
+        LambdaQueryWrapper<Orders> queryWrapper = new LambdaQueryWrapper();
+        queryWrapper.orderByAsc(Orders::getOrderTime);
+        ordersService.page(pagec, queryWrapper);
+        return R.success(pagec);
     }
 
 }
