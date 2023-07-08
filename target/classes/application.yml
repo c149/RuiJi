@@ -33,5 +33,5 @@ mybatis-plus:
     banner: false
 
 ruiji:
-#  path: /home/project/ruiji/img/
-  path: D:/WorkingFile/Java/DATA/Ruiji/img/
+  path: /home/project/ruiji/img/
+#  path: D:/WorkingFile/Java/DATA/Ruiji/img/
