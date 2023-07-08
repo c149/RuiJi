@@ -75,6 +75,7 @@ public class DishServiceImpl extends ServiceImpl<DishDao, Dish> implements DishS
     public List<DishDto> listWithFlavor(long categoryId) {
         List<DishDto> dishDtos = null;
         String key = "dish_" + categoryId;
+        //存在分类就直接获取，否则新建一个
         dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
         if (dishDtos != null) {
             return dishDtos;
