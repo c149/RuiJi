@@ -4,6 +4,8 @@ package com.ruiji.common;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.processing.FilerException;
+import java.io.FileNotFoundException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice(annotations = {RestController.class,Controller.class})
@@ -25,5 +27,9 @@ public class GlobalException{
     @ExceptionHandler(CustomException.class)
     public R<String> exceptionHandler1(CustomException ex) {
         return R.error(ex.getMessage());
+    }
+    @ExceptionHandler(FileNotFoundException.class)
+    public R<String> exceptionHandler2(FileNotFoundException ex) {
+        return R.error("path error!");
     }
 }

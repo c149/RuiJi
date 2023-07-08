@@ -10,19 +10,26 @@ import com.ruiji.service.DishFlavorService;
 import com.ruiji.service.DishService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
 public class DishServiceImpl extends ServiceImpl<DishDao, Dish> implements DishService {
     @Autowired
     private DishFlavorService dishFlavorService;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Override
     @Transactional
     public void saveWithFlavor(DishDto dishDto) {
+        String key = "dish_" + dishDto.getCategoryId();
+        redisTemplate.delete(key);
         this.save(dishDto);
         Long dishId = dishDto.getId();
         List<DishFlavor> flavors = dishDto.getFlavors();
@@ -36,6 +43,10 @@ public class DishServiceImpl extends ServiceImpl<DishDao, Dish> implements DishS
     @Override
     @Transactional
     public void updateWithFlavor(DishDto dishDto) {
+//        Set keys = redisTemplate.keys("*");
+//        redisTemplate.delete(keys);  //清理所有key
+        String key = "dish_" + dishDto.getCategoryId();
+        redisTemplate.delete(key);
         this.updateById(dishDto);
         LambdaQueryWrapper<DishFlavor> lqw = new LambdaQueryWrapper<>();
         lqw.eq(DishFlavor::getDishId,dishDto.getId());
@@ -62,10 +73,16 @@ public class DishServiceImpl extends ServiceImpl<DishDao, Dish> implements DishS
 
     @Override
     public List<DishDto> listWithFlavor(long categoryId) {
+        List<DishDto> dishDtos = null;
+        String key = "dish_" + categoryId;
+        dishDtos = (List<DishDto>) redisTemplate.opsForValue().get(key);
+        if (dishDtos != null) {
+            return dishDtos;
+        }
         LambdaQueryWrapper<Dish> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Dish::getCategoryId, categoryId);
         List<Dish> list = this.list(lqw);
-        List<DishDto> dishDtos =list.stream().map(dish -> {
+        dishDtos =list.stream().map(dish -> {
             DishDto dishDto = new DishDto();
             BeanUtils.copyProperties(dish, dishDto);
             LambdaQueryWrapper<DishFlavor> flavorWrapper = new LambdaQueryWrapper<>();
@@ -74,6 +91,7 @@ public class DishServiceImpl extends ServiceImpl<DishDao, Dish> implements DishS
             dishDto.setFlavors(dishFlavors);
             return dishDto;
         }).collect(Collectors.toList());
+        redisTemplate.opsForValue().set(key, dishDtos, 60, TimeUnit.MINUTES);
         return dishDtos;
     }
 }
