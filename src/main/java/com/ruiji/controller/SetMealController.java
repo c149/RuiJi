@@ -11,6 +11,8 @@ import com.ruiji.service.CategoryService;
 import com.ruiji.service.SetMealService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,11 +51,13 @@ public class SetMealController {
         return R.success(setMealByIdWithDish);
     }
     @PostMapping
+    @CacheEvict(value = "setmeal" , allEntries = true)
     public R<String> addSetmeal(@RequestBody SetmealDto setmealDto) {
         setMealService.addSetMealWithDish(setmealDto);
         return R.success("success");
     }
     @PutMapping
+    @CacheEvict(value = "setmeal" , allEntries = true)
     public R<String> editSetmeal(@RequestBody SetmealDto setmealDto) {
         setMealService.editSetMealWithDish(setmealDto);
         return R.success("success");
@@ -70,11 +74,13 @@ public class SetMealController {
         return R.success("");
     }
     @DeleteMapping
+    @CacheEvict(value = "setmeal" , allEntries = true)
     public R<String> deleteSetmeal(Long[] ids) {
         setMealService.deleteSetMealWithWithDishs(ids);
         return R.success("");
     }
     @GetMapping("/list")
+    @Cacheable(value = "setmeal" , key = "#categoryId+'_'+#status")
     public R<List<SetMeal>> listSetMeal(Long categoryId, Integer status) {
         if(categoryId == null || status == null) return R.error(null);
         LambdaQueryWrapper<SetMeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();

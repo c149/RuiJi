@@ -2,11 +2,12 @@ package com.ruiji.common;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class R<T> {//通用的返回结果
+public class R<T> implements Serializable {//通用的返回结果
     private Integer code;
     private T data;
     private String msg;
