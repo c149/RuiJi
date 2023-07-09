@@ -9,6 +9,10 @@ import com.ruiji.daomin.SetmealDish;
 import com.ruiji.dto.SetmealDto;
 import com.ruiji.service.CategoryService;
 import com.ruiji.service.SetMealService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,12 +24,18 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/setmeal")
+@Api(tags = "套餐相关接口")
 public class SetMealController {
     @Autowired
     private SetMealService setMealService;
     @Autowired
     private CategoryService categoryService;
-    @GetMapping("/page")
+    @GetMapping
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "页数", required = true),
+            @ApiImplicitParam(name = "name", value = "查询信息", required = false)
+    })
     public R<Page> getSetmealPage(String name, int page, int pageSize){
         Page<SetMeal> page1 = new Page<>(page, pageSize);
         LambdaQueryWrapper<SetMeal> lqw = new LambdaQueryWrapper<>();
@@ -52,6 +62,7 @@ public class SetMealController {
     }
     @PostMapping
     @CacheEvict(value = "setmeal" , allEntries = true)
+    @ApiOperation(value = "新增套餐")
     public R<String> addSetmeal(@RequestBody SetmealDto setmealDto) {
         setMealService.addSetMealWithDish(setmealDto);
         return R.success("success");

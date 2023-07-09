@@ -33,9 +33,8 @@ spring:
     props:
       sql:
         show: true #开启SQL显示，默认false
-    main:
-      allow-bean-definition-overriding: true #避免重定义数据源
   main:
+    allow-bean-definition-overriding: true #避免重定义数据源
     banner-mode: off
   redis:
     host: 39.105.115.148

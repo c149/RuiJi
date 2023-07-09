@@ -30,7 +30,11 @@ public class LoginCheckFilter implements Filter {
                 "/common/**",
                 "/backend/**",
                 "/front/**",
-                "/test/**"
+                "/test/**",
+                "/doc.html",
+                "/webjars/**",
+                "/swagger-resources",
+                "/v2/api-docs"
         };
         log.info("开始匹配{}",uri);
         if(check(urls, uri)) {

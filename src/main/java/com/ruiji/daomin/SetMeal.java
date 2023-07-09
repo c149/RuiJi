@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("setmeal")
+@ApiModel("套餐")
 public class SetMeal implements Serializable {
 
     private static final long serialVersionUID = 1L;
